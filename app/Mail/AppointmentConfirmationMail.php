@@ -12,6 +12,7 @@ use App\Models\Appointment;
 
 
 
+
 class AppointmentConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -19,19 +20,14 @@ class AppointmentConfirmationMail extends Mailable
 
     public $appointment;
     
-    /**
-     * 
-     * Create a new message instance.
-     */
+   
     public function __construct(Appointment $appointment)
     {
         $this->appointment = $appointment;
      
     }
 
-    /**
-     * Get the message envelope.
-     */
+    
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -39,9 +35,7 @@ class AppointmentConfirmationMail extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
+    
     public function content(): Content
     {
         return new Content(

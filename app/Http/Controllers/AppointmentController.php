@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\Client;
 use Illuminate\Support\Str;
+use App\Mail\AppointmentConfirmationMail;
+
 
 
 use Illuminate\Support\Facades\Mail; 
@@ -14,27 +16,28 @@ use App\Mail\NewApt;
 class AppointmentController extends Controller
 {
     public function index(Request $request)
-    {
-        $search = $request->query('search');
+{
+    $search = $request->query('search');
 
-        if ($search) {
-            $search = "%$search%";
-            $appointments = Appointment::where('apt_id', 'like', $search)
-                                        ->orWhere('time', 'like', $search)
-                                        ->orWhere('date', 'like', $search)
-                                        ->orWhereHas('client', function ($query) use ($search) {
-                                            $query->where('firstname', 'like', $search)
-                                                  ->orWhere('lastname', 'like', $search)
-                                                  ->orWhere('email', 'like', $search);
-                                        })
-                                        ->orderBy('created_at', 'desc')
-                                        ->paginate(15);
-        } else {
-            $appointments = Appointment::orderBy('created_at', 'desc')->paginate(15);
-        }
-
-        return view('appointments.index', compact('appointments'));
+    if ($search) {
+        $search = "%$search%";
+        $appointments = Appointment::where('id', 'like', $search)
+                                    ->orWhere('time', 'like', $search)
+                                    ->orWhere('date', 'like', $search)
+                                    ->orWhereHas('client', function ($query) use ($search) {
+                                        $query->where('firstname', 'like', $search)
+                                              ->orWhere('lastname', 'like', $search)
+                                              ->orWhere('email', 'like', $search);
+                                    })
+                                    ->orderBy('created_at', 'desc')
+                                    ->paginate(15);
+    } else {
+        $appointments = Appointment::orderBy('created_at', 'desc')->paginate(15);
     }
+
+    return view('appointments.index', compact('appointments'));
+}
+
 
     public function create()
     {
@@ -94,10 +97,10 @@ class AppointmentController extends Controller
   
     $newApt=Appointment::create($validatedData);
 
-    
+    $clientEmail = $newApt->client->email;
 
 
-    Mail::to($newApt->email)->send(new NewApt($newApt)); 
+    Mail::to($clientEmail)->send(new AppointmentConfirmationMail($newApt));
 
     //return $newApt;
 

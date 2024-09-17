@@ -4,11 +4,12 @@
 
 @section('content')
 <div class="col">
-    <x-textfield value="" label="Search for appointment" name="search" type="text" placeholder="Enter name " />
-  
+  <form class="row flex g-3 justify-content-center" action="{{ route('appointments.index') }}" method="GET">
+    <div class="col">
+        <x-textfield value="" label="Search for appointment" name="search" type="text" placeholder="Enter name" />
+    </div>
     <button class="btn btn-success" type="submit">Search</button>
-  </div>
-<form class="row flex g-3 justify-content-center"  action="{{route('appointments.index')}}" method="GET" >
+</form>
 
 
   <div class="col">
