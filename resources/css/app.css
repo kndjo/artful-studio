@@ -1,0 +1,21 @@
+/* public/css/app.css */
+.bg-blur {
+    background: url('https://img.freepik.com/free-vector/vintage-tattoo-studio-logo-with-rose-vector-illustration-black-white-flower-with-tape_74855-11255.jpg?t=st=1726398447~exp=1726402047~hmac=1e8af3462e5f82535dcf9737476355cc5af171e7313d72d3763ec68352a14119&w=740');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.bg-blur::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    filter: blur(8px);
+    z-index: -1;
+}

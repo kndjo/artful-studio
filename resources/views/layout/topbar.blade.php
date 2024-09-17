@@ -7,17 +7,18 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-          <a class="nav-link" href="#">Appointments</a>
-          <a class="nav-link" href="#">Clients</a>
-          <a class="nav-link" href="#">Reviews</a>
-
-          
-          <a class="nav-link" href="#">Users</a>
          
-          <form action="#" method="post">
-            
-            <button class="btn btn-success" type="submit">Logout</button>
+          <a class="nav-link active" aria-current="page" href=" {{ route('homepage') }}">Dashboard</a>
+          <a class="nav-link" href="{{route('appointments.index')}}">Appointments</a>
+          <a class="nav-link" href="{{route('clients.index')}}">Clients</a>
+       
+          
+         
+         
+          <form class="d-flex" role="search" action="{{ route('auth.logout') }}" method="POST" >   @csrf
+
+           
+            <button class="btn btn-outline-success" type="submit" >Logout</button>
           </form>
           
           

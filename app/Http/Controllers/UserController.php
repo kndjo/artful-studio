@@ -9,9 +9,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         $users = user::all();
@@ -27,51 +25,81 @@ class UserController extends Controller
 
     
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         //
+        return view('users.create',[ "user" => new User ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
         //
+        $validatedData = $request->validate([
+            'fullname'=>'required',
+            'lastname'=>'required',
+            'username'=>'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed',
+            
+        ]);
+    
+        $user = User::create([
+            'fullname'=>$validatedData['fullname'],
+            'lastname'=>$validatedData['lastname'],
+            'username'=>$validatedData['username'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+        ]);
+
+        return redirect()->route('users.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+   
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+   
+    public function update(Request $request, User $user)
     {
         //
+
+       
+        $validatedData = $request->validate([
+            'fullname' => 'required',
+            'lastname' => 'required',
+            'username' => 'required|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($validatedData);
+        return redirect()->route('users.index');
+
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    
+    public function destroy( $id)
     {
         //
+
+        $users = User::find($id);
+        if ($users) {
+            $users->delete($users);
+            return redirect()->route('users.index')->with('success', 'User deleted successfully');
+        } else {
+            return redirect()->route('users.index')->with('error', 'User not found');
+        }
     }
+
+ 
 }

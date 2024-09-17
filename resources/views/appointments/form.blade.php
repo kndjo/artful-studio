@@ -7,7 +7,7 @@
     @endisset
 
     <div class="row g-3">
-        {{-- Time Field --}}
+      
         <div class="col">
             <x-textfield 
                 name="time" 
@@ -18,7 +18,7 @@
             />
         </div>
 
-        {{-- Date Field --}}
+       
         <div class="col">
             <x-textfield 
                 name="date" 
@@ -31,7 +31,7 @@
     </div>
 
     <div class="row g-3">
-        {{-- Client Selection --}}
+      
         <div class="col">
             @php
                 $clientOptions = $clients->map(function ($client) {
@@ -47,7 +47,7 @@
             />
         </div>
 
-        {{-- Status Field --}}
+       
         <div class="col">
             @php
                 $statusOptions = [

@@ -1,9 +1,15 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\Client;
+use Illuminate\Support\Str;
+
+
+use Illuminate\Support\Facades\Mail; 
+use App\Mail\NewApt;
 
 class AppointmentController extends Controller
 {
@@ -13,7 +19,8 @@ class AppointmentController extends Controller
 
         if ($search) {
             $search = "%$search%";
-            $appointments = Appointment::where('time', 'like', $search)
+            $appointments = Appointment::where('apt_id', 'like', $search)
+                                        ->orWhere('time', 'like', $search)
                                         ->orWhere('date', 'like', $search)
                                         ->orWhereHas('client', function ($query) use ($search) {
                                             $query->where('firstname', 'like', $search)
@@ -43,26 +50,60 @@ class AppointmentController extends Controller
             $timeOptions[] = [
                 'value' => str_pad($i, 2, '0', STR_PAD_LEFT) . ':30',
                 'label' => str_pad($i, 2, '0', STR_PAD_LEFT) . ':30'
-            ];
-        }
+            ];}
 
-        return view('appointments.create', compact('clients', 'timeOptions'));
+        return view('appointments.create', compact('clients'));
     }
+
+    // public function store(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'time' => 'required',
+    //         'date' => 'required|date',
+    //         'client_id' => 'required|exists:clients,id',
+    //         'status' => 'required|in:pending,confirmed,completed,canceled',
+    //     ]);
+
+       
+    //     $latestAppointment = Appointment::orderBy('id', 'desc')->first();
+    //     $nextNumber = $latestAppointment ? intval(substr($latestAppointment->apt_id, 3)) + 1 : 1;
+    //     $apt_id = 'APT' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        
+    //     $validatedData['apt_id'] = $apt_id;
+
+        
+    //     Appointment::create($validatedData);
+
+    //     return redirect()->route('appointments.index')->with('success', 'Appointment created successfully');
+    // }
+
 
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'time' => 'required',
-            'date' => 'required|date',
-            'client_id' => 'required|exists:clients,id',
-            'status' => 'required|in:pending,confirmed,completed,canceled',
-        ]);
+{
+    $validatedData = $request->validate([
+        'time' => 'required',
+        'date' => 'required|date',
+        'client_id' => 'required|exists:clients,id',
+        'status' => 'required|in:pending,confirmed,completed,canceled',
+    ]);
 
-        // Create the appointment with the validated data
-        Appointment::create($validatedData);
+    
+    //$validatedData['apt_id'] = 'APT' . Str::uuid();
 
-        return redirect()->route('appointments.index')->with('success', 'Appointment created successfully');
-    }
+  
+    $newApt=Appointment::create($validatedData);
+
+    
+
+
+    Mail::to($newApt->email)->send(new NewApt($newApt)); 
+
+    //return $newApt;
+
+    return redirect()->route('appointments.index')->with('success', 'Appointment created successfully');
+}
+
 
     public function show(Appointment $appointment)
     {
