@@ -12,7 +12,11 @@
           <a class="nav-link" href="{{route('appointments.index')}}">Appointments</a>
           <a class="nav-link" href="{{route('clients.index')}}">Clients</a>
        
-          
+          @if(Auth::user()->role === 'super_admin')
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('users.index')}}">Users</a>
+          </li>
+          @endif
          
          
           <form class="d-flex" role="search" action="{{ route('auth.logout') }}" method="POST" >   @csrf

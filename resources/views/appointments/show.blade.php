@@ -20,10 +20,12 @@
 
 
 <a href="{{ route('appointments.edit', $appointment->id) }}" class="btn btn-primary">Edit Appointment</a>
+@if(Auth::user()->role === 'super_admin')
 <form action="{{ route('appointments.destroy', $appointment->id) }}" method="POST" style="display: inline-block;">
     @csrf
     @method('DELETE')
     <button type="submit" class="btn btn-danger">Delete   
  Appointment</button>
 </form>
+@endif
 @endsection

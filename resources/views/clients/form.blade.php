@@ -9,6 +9,7 @@
 </div>
 
 
+
 <div class="col">
         <x-textfield name="lastname" :value="$client->lastname" label="Lastname" type="text" placeholder="Enter client lastname" />
         </div>

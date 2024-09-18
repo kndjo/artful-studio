@@ -30,9 +30,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('appointments.index') }}">Appointments</a>
                     </li>
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" href="{{ route('logout') }}">Logout</a>
-                    </li> --}}
+                    @if(Auth::user()->role === 'super_admin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                    </li>
+                    @endif
                 </ul>
                 <form class="d-flex" role="search" action="{{ route('auth.logout') }}" method="POST" >   @csrf
 

@@ -7,8 +7,9 @@
   <form class="row flex g-3 justify-content-center" action="{{ route('appointments.index') }}" method="GET">
     <div class="col">
         <x-textfield value="" label="Search for appointment" name="search" type="text" placeholder="Enter name" />
+        <button class="btn btn-success" type="submit">Search</button>
     </div>
-    <button class="btn btn-success" type="submit">Search</button>
+   
 </form>
 
 

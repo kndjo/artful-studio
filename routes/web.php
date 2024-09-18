@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\AptController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 
@@ -27,20 +27,21 @@ use App\Http\Controllers\DashboardController;
 Route::redirect('/','/login');
 
 Route::resource('clients', ClientController::class)->middleware('auth');;
-Route::resource('appointments', AppointmentController::class)->middleware('auth');;
+Route::resource('appointments', AppointmentController::class)->middleware('auth');
+Route::resource('users', UserController::class)->middleware('auth');
 
 //Route::resource('apts', AptController::class);
 
 
-Route::get('login', [AuthController::class, 'getLoginPage'])->name('auth.login')->middleware('guest');
-Route::post('login', [AuthController::class, 'authenticate'])->name('authenticate')->middleware('guest');
+// Route::get('login', [AuthController::class, 'getLoginPage'])->name('auth.login')->middleware('guest');
+// Route::post('login', [AuthController::class, 'authenticate'])->name('authenticate')->middleware('guest');
 
 
 
 
 
 
-Route::get('/homepage', [DashboardController::class, 'index'])->name('homepage')->middleware('auth');;
+Route::get('/homepage', [DashboardController::class, 'index'])->name('homepage')->middleware('auth');
 Route::post('/logout',[AuthController::class, 'logout'])->name('auth.logout')->middleware('auth');;
 
 
@@ -49,19 +50,41 @@ Route::post('/logout',[AuthController::class, 'logout'])->name('auth.logout')->m
 
 
 
-Route::get('/register', [AuthController::class, 'getRegisterPage'])->name('register')->middleware('auth');;
-Route::post('/register', [AuthController::class, 'register'])->middleware('auth')->middleware('guest');
+// Route::get('/register', [AuthController::class, 'getRegisterPage'])->name('register')->middleware('auth');;
+// Route::post('/register', [AuthController::class, 'register'])->middleware('auth')->middleware('guest');
 
 
 
 
 
-Route::get('/forgot-password', [AuthController::class, 'getForgotPasswordPage'])->name('forgot-password')->middleware('guest');
+// Route::get('/forgot-password', [AuthController::class, 'getForgotPasswordPage'])->name('forgot-password')->middleware('guest');
 
-Route::post('/forgot-password', [AuthController::class, 'requestForgotPasswordLink'])->name('auth.requestForgotPasswordLink')->middleware('guest');
+// Route::post('/forgot-password', [AuthController::class, 'requestForgotPasswordLink'])->name('auth.requestForgotPasswordLink')->middleware('guest');
 
 
 
-Route::get('/reset-password/{token}', [AuthController::class, 'getResetPage'])->name('auth.reset')->middleware('guest');
+// Route::get('/reset-password/{token}', [AuthController::class, 'getResetPage'])->name('auth.reset')->middleware('guest');
 
-Route::post('/reset-password',[AuthController::class, 'getrequestReset'])->name('auth.requestReset')->middleware('guest');
+// Route::post('/reset-password',[AuthController::class, 'getrequestReset'])->name('auth.requestReset')->middleware('guest');
+
+
+Route::get('login', [AuthController::class, 'getLoginPage'])->name('auth.login')->middleware('guest');
+Route::get('register', [AuthController::class, 'getRegisterPage'])->name('register')->middleware('guest');
+Route::post('register', [AuthController::class, 'register'])->name('register')->middleware('guest');
+Route::post('login', [AuthController::class, 'authenticate'])->name('authenticate')->middleware('guest');
+
+
+ Route::get('forgot-password', [AuthController::class, 'getForgotPasswordPage'])->name('forgot-password')->middleware('guest');
+ Route::post('forgot-password', [AuthController::class, 'requestForgotPasswordLink'])->name('auth.requestForgotPasswordLink')->middleware('guest');
+// Route::get('reset-password/{token}', [AuthController::class, 'getResetPage'])->name('auth.resetPage');
+// Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('auth.resetPassword');
+
+
+//Route::get('forgot-password', [AuthController::class, 'getForgotPasswordPage'])->name('auth.forgot-password');
+//Route::post('forgot-password', [AuthController::class, 'requestForgotPasswordLink'])->name('auth.requestForgotPasswordLink');
+// Route::get('reset-password/{token}', [AuthController::class, 'getResetPage'])->name('auth.resetPassword');
+// Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('auth.resetPassword');
+
+
+Route::get('reset-password/{token}', [AuthController::class, 'getResetPage'])->name('auth.resetPassword')->middleware('guest');
+Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('auth.resetPassword')->middleware('guest');

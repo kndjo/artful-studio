@@ -42,6 +42,7 @@ class AuthController extends Controller
             'username' => $validatedData['username'],
             'email' => $validatedData['email'],
             'password' => $validatedData['password'],
+            'role' => 'admin', 
         ]);
 
         return redirect()->route('auth.login')->with('status', 'Registration successful. Please log in.');
@@ -69,7 +70,7 @@ class AuthController extends Controller
     
         return back()->withErrors([
             'login' => 'The provided credentials do not match our records.',
-        ])->onlyInput('login');
+        ])->onlyInput('auth.login');
 
         
     }
@@ -111,27 +112,43 @@ class AuthController extends Controller
     // }
 
 
-    public function requestForgotPasswordLink(Request $request)
+//     public function requestForgotPasswordLink(Request $request)
+// {
+//     $request->validate([
+//         'email' => 'required|email|exists:users,email',
+//     ]);
+
+   
+
+//     $status = Password::sendResetLink(
+//         $request->only('email')
+//     );
+
+    
+//     if ($status === Password::RESET_LINK_SENT) {
+     
+//          return redirect('/login')->with('status', __($status));
+//     } else {
+        
+//         return back()->withErrors(['email' => __($status)]);
+//     }
+// }
+
+public function requestForgotPasswordLink(Request $request)
 {
     $request->validate([
         'email' => 'required|email|exists:users,email',
     ]);
 
-   
-
     $status = Password::sendResetLink(
         $request->only('email')
     );
 
-    
-    if ($status === Password::RESET_LINK_SENT) {
-     
-         return redirect('/login')->with('status', __($status));
-    } else {
-        
-        return back()->withErrors(['email' => __($status)]);
-    }
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with('status', __($status))
+        : back()->withErrors(['email' => __($status)]);
 }
+
 
 public function getResetPage(Request $request, $token)
 {
@@ -168,6 +185,26 @@ public function getResetPage(Request $request, $token)
 
         ];
     }
+
+
+    public function resetPassword(Request $request)
+{
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|confirmed',
+    ]);
+
+    $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), function ($user, $password) {
+        $user->password = Hash::make($password);
+        $user->save();
+    });
+
+    return $status === Password::PASSWORD_RESET
+        ? redirect()->route('auth.login')->with('status', __($status))
+        : back()->withErrors(['email' => __($status)]);
+}
+
 
     public function revokeToken(Request $request) {
 

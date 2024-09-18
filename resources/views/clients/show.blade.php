@@ -21,10 +21,13 @@
 
 
 <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-primary">Edit Client</a>
+@if(Auth::user()->role === 'super_admin')
 <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display: inline-block;">
     @csrf
     @method('DELETE')
     <button type="submit" class="btn btn-danger">Delete   
  Client</button>
+
 </form>
+@endif
 @endsection
